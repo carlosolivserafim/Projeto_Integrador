@@ -1,0 +1,95 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema ProjetoMazon
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema ProjetoMazon
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `ProjetoMazon` DEFAULT CHARACTER SET utf8 ;
+USE `ProjetoMazon` ;
+
+-- -----------------------------------------------------
+-- Table `ProjetoMazon`.`CLIENTE`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ProjetoMazon`.`CLIENTE` (
+  `IU_CLIENTE` INT NOT NULL AUTO_INCREMENT,
+  `NOME` VARCHAR(120) NOT NULL,
+  `CPF_CNPJ` VARCHAR(20) NOT NULL,
+  `TELEFONE` VARCHAR(20) NULL,
+  PRIMARY KEY (`IU_CLIENTE`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `ProjetoMazon`.`COLABORADOR`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ProjetoMazon`.`COLABORADOR` (
+  `IU_COLABORADOR` INT NOT NULL AUTO_INCREMENT,
+  `NOME` VARCHAR(120) NOT NULL,
+  `MATRICULA` VARCHAR(15) NOT NULL,
+  `CPF` VARCHAR(20) NOT NULL,
+  `TELEFONE` VARCHAR(20) NULL,
+  PRIMARY KEY (`IU_COLABORADOR`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `ProjetoMazon`.`PROJETO`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ProjetoMazon`.`PROJETO` (
+  `IU_PROJETO` INT NOT NULL AUTO_INCREMENT,
+  `NOME` VARCHAR(125) NOT NULL,
+  `VALOR` INT NOT NULL,
+  `STATUS` VARCHAR(20) NOT NULL,
+  `DATA_INICIO` DATE NOT NULL,
+  `ENTREGA_ESTIMADA` DATE NOT NULL,
+  `PROGRESSO` INT NOT NULL,
+  `IU_CLIENTE` INT NOT NULL,
+  `IU_COLABORADOR` INT NOT NULL,
+  PRIMARY KEY (`IU_PROJETO`),
+  INDEX `fk_PROJETO_CLIENTE1_idx` (`IU_CLIENTE` ASC) ,
+  INDEX `fk_PROJETO_COLABORADOR1_idx` (`IU_COLABORADOR` ASC) ,
+  CONSTRAINT `fk_PROJETO_CLIENTE1`
+    FOREIGN KEY (`IU_CLIENTE`)
+    REFERENCES `ProjetoMazon`.`CLIENTE` (`IU_CLIENTE`)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_PROJETO_COLABORADOR1`
+    FOREIGN KEY (`IU_COLABORADOR`)
+    REFERENCES `ProjetoMazon`.`COLABORADOR` (`IU_COLABORADOR`)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `ProjetoMazon`.`ATIVIDADE`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ProjetoMazon`.`ATIVIDADE` (
+  `IU_ATIVIDADE` INT NOT NULL AUTO_INCREMENT,
+  `NOME` VARCHAR(120) NOT NULL,
+  `VALOR` INT NOT NULL,
+  `STATUS` VARCHAR(25) NOT NULL,
+  `PROGRESSO` VARCHAR(20) NOT NULL,
+  `DATA_INICIO` DATE NOT NULL,
+  `ENTREGA_ESTIMADA` DATE NOT NULL,
+  `IU_PROJETO` INT NOT NULL,
+  PRIMARY KEY (`IU_ATIVIDADE`),
+  INDEX `fk_ATIVIDADE_PROJETO1_idx` (`IU_PROJETO` ASC) ,
+  CONSTRAINT `fk_ATIVIDADE_PROJETO1`
+    FOREIGN KEY (`IU_PROJETO`)
+    REFERENCES `ProjetoMazon`.`PROJETO` (`IU_PROJETO`)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE)
+ENGINE = InnoDB;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
